@@ -1,1 +1,1 @@
-# snort-firewall
+# snort-integration
