@@ -36,14 +36,14 @@ class NetworkTap(app_manager.RyuApp):
 
         # inport -> outport
         # inport -> mirror port
-        in_match = parser.OFPMatch(inport=tap_inport)
+        in_match = parser.OFPMatch(in_port=tap_inport)
         in_actions = [parser.OFPActionOutput(tap_outport),
                       parser.OFPActionOutput(mirror_port)]
         ofp_helper.add_flow(datapath, tap_priority, in_match, in_actions)
 
         # outport -> mirror port
         # outport -> inport
-        out_match = parser.OFPMatch(inport=tap_outport)
+        out_match = parser.OFPMatch(in_port=tap_outport)
         out_actions = [parser.OFPActionOutput(tap_inport),
                        parser.OFPActionOutput(mirror_port)]
         ofp_helper.add_flow(datapath, tap_priority, out_match, out_actions)
