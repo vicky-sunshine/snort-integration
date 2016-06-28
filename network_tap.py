@@ -10,12 +10,12 @@ from route import urls
 
 network_tap_instance_name = 'network_tap_api_app'
 
-# Port 2, connect to Lan
-# Port 3, connect to Internet
-# Port 4, mirror both 2 and 3
-tap_inport = 2
-tap_outport = 3
-mirror_port = 4
+# port_a, connect to Lan
+# port_b, connect to Internet
+# port_ab, mirror both 2 and 3
+port_a = 1
+port_b = 2
+port_ab = 4
 
 tap_priority = 100
 
@@ -36,16 +36,16 @@ class NetworkTap(app_manager.RyuApp):
 
         # inport -> outport
         # inport -> mirror port
-        in_match = parser.OFPMatch(in_port=tap_inport)
-        in_actions = [parser.OFPActionOutput(tap_outport),
-                      parser.OFPActionOutput(mirror_port)]
+        in_match = parser.OFPMatch(in_port=port_a)
+        in_actions = [parser.OFPActionOutput(port_b),
+                      parser.OFPActionOutput(port_ab)]
         ofp_helper.add_flow(datapath, tap_priority, in_match, in_actions)
 
         # outport -> mirror port
         # outport -> inport
-        out_match = parser.OFPMatch(in_port=tap_outport)
-        out_actions = [parser.OFPActionOutput(tap_inport),
-                       parser.OFPActionOutput(mirror_port)]
+        out_match = parser.OFPMatch(in_port=port_b)
+        out_actions = [parser.OFPActionOutput(port_a),
+                       parser.OFPActionOutput(port_ab)]
         ofp_helper.add_flow(datapath, tap_priority, out_match, out_actions)
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
@@ -59,7 +59,7 @@ class NetworkTapController(ControllerBase):
         super(NetworkTapController, self).__init__(req, link, data, **config)
         self.stat_monitor_spp = data[network_tap_instance_name]
 
-    @route('network_tap', urls.tap_inport, methods=['PUT'])
+    @route('network_tap', urls.port_config, methods=['PUT'])
     def hello(self, req, **kwargs):
         # just a dump API
         return Response(status=200)
