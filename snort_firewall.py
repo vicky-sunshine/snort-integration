@@ -36,24 +36,40 @@ class SnortFirewall(app_manager.RyuApp):
             actions = []  # drop
 
             # initial match field(IP layer)
-            match_dict = {'eth_type': ether.ETH_TYPE_IP,
-                          'ipv4_src': src_ip,
-                          'ipv4_dst': dst_ip}
-
-            # fill into the layer3 and layer 4 protocol
-            if protocol == inet.IPPROTO_TCP:
-                match_dict.update({'ip_proto': protocol,
-                                   'tcp_dst': dst_port,
-                                   'tcp_src': src_port})
-            elif protocol == inet.IPPROTO_UDP:
-                match_dict.update({'ip_proto': protocol,
-                                   'udp_dst': dst_port,
-                                   'udp_src': src_port})
-            else:
-                pass
+            match_dict = self.handle_match(src_ip, dst_ip, protocol,
+                                           dst_port, src_port)
 
             match = parser.OFPMatch(**match_dict)
             ofp_helper.add_flow(datapath, fw_priority, match, actions)
+
+    def handle_match(self, src_ip, dst_ip, protocol, dst_port, src_port):
+        # initial match field(IP layer)
+        match_dict = {'eth_type': ether.ETH_TYPE_IP}
+
+        if src_ip:
+            match_dict.update({'ipv4_src': src_ip})
+
+        if dst_ip:
+            match_dict.update({'ipv4_dst': dst_ip})
+
+        # fill into the layer3 and layer 4 protocol
+        if src_port:
+            if protocol == inet.IPPROTO_TCP:
+                match_dict.update({'ip_proto': protocol,
+                                   'tcp_src': src_port})
+            elif protocol == inet.IPPROTO_UDP:
+                match_dict.update({'ip_proto': protocol,
+                                   'udp_src': src_port})
+
+        if dst_port:
+            if protocol == inet.IPPROTO_TCP:
+                match_dict.update({'ip_proto': protocol,
+                                   'tcp_dst': dst_port})
+            elif protocol == inet.IPPROTO_UDP:
+                match_dict.update({'ip_proto': protocol,
+                                   'udp_dst': dst_port})
+
+        return match_dict
 
 
 class SnortFirewallController(ControllerBase):
