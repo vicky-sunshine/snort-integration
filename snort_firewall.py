@@ -52,22 +52,21 @@ class SnortFirewall(app_manager.RyuApp):
         if dst_ip:
             match_dict.update({'ipv4_dst': dst_ip})
 
+        if protocol:
+            match_dict.update({'ip_proto': protocol})
+
         # fill into the layer3 and layer 4 protocol
         if src_port:
             if protocol == inet.IPPROTO_TCP:
-                match_dict.update({'ip_proto': protocol,
-                                   'tcp_src': src_port})
+                match_dict.update({'tcp_src': src_port})
             elif protocol == inet.IPPROTO_UDP:
-                match_dict.update({'ip_proto': protocol,
-                                   'udp_src': src_port})
+                match_dict.update({'udp_src': src_port})
 
         if dst_port:
             if protocol == inet.IPPROTO_TCP:
-                match_dict.update({'ip_proto': protocol,
-                                   'tcp_dst': dst_port})
+                match_dict.update({'tcp_dst': dst_port})
             elif protocol == inet.IPPROTO_UDP:
-                match_dict.update({'ip_proto': protocol,
-                                   'udp_dst': dst_port})
+                match_dict.update({'udp_dst': dst_port})
 
         return match_dict
 
@@ -92,14 +91,17 @@ class SnortFirewallController(ControllerBase):
 
             if protocol == 'TCP':
                 protocol = inet.IPPROTO_TCP
-            elif (protocol == 'UDP'):
+            elif protocol == 'UDP':
                 protocol = inet.IPPROTO_UDP
+            elif protocol == 'ICMP':
+                protocol = inet.IPPROTO_ICMP
             else:
                 pass
 
             snort_firewall.add_block_rule(src_ip, dst_ip, protocol,
                                           dst_port, src_port)
-        except:
+        except Exception as e:
+            print e
             return Response(status=406)
 
         return Response(status=202)
