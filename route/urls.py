@@ -2,4 +2,4 @@
 firewall_acl = '/api/firewall/acl'
 
 # network tap
-tap_inport = '/api/network_tap/inport'
+port_config = '/api/network_tap/inport'
