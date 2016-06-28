@@ -1,5 +1,5 @@
 def add_flow(datapath, priority, match, actions,
-             idle_timeout=0, buffer_id=None):
+             hard_timeout=0, buffer_id=None):
     ofproto = datapath.ofproto
     parser = datapath.ofproto_parser
 
@@ -7,14 +7,14 @@ def add_flow(datapath, priority, match, actions,
                                          actions)]
     if buffer_id:
         mod = parser.OFPFlowMod(datapath=datapath,
-                                idle_timeout=idle_timeout,
+                                hard_timeout=hard_timeout,
                                 buffer_id=buffer_id,
                                 priority=priority,
                                 match=match,
                                 instructions=inst)
     else:
         mod = parser.OFPFlowMod(datapath=datapath,
-                                idle_timeout=idle_timeout,
+                                hard_timeout=hard_timeout,
                                 priority=priority,
                                 match=match,
                                 instructions=inst)

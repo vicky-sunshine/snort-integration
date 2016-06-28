@@ -40,7 +40,7 @@ class SnortFirewall(app_manager.RyuApp):
                                            dst_port, src_port)
 
             match = parser.OFPMatch(**match_dict)
-            ofp_helper.add_flow(datapath, fw_priority, match, actions)
+            ofp_helper.add_flow(datapath, fw_priority, match, actions, 10)
 
     def handle_match(self, src_ip, dst_ip, protocol, dst_port, src_port):
         # initial match field(IP layer)
