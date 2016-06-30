@@ -83,10 +83,10 @@ class SnortFirewallController(ControllerBase):
             snort_firewall = self.snort_firewall_spp
             request_tuple = json.loads(req.body)
 
-            src_ip = str(request_tuple.get('srcIP'))
-            dst_ip = str(request_tuple.get('dstIP'))
-            src_port = request_tuple.get('srcPort')
-            dst_port = request_tuple.get('dstPort')
+            src_ip = str(request_tuple.get('src_ip'))
+            dst_ip = str(request_tuple.get('dst_ip'))
+            src_port = request_tuple.get('src_port')
+            dst_port = request_tuple.get('dst_port')
             protocol = str(request_tuple.get('protocol'))
 
             if protocol == 'TCP':
