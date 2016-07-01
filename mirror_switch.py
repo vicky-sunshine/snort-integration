@@ -14,7 +14,7 @@ from route import urls
 mirror_switch_instance_name = 'network_tap_api_app'
 
 # monitor_port, mirror all port traffic
-monitor_port = 48
+monitor_port = 24
 
 
 class MirrorSwitch(app_manager.RyuApp):
