@@ -14,4 +14,4 @@ WORKDIR /root/snort-integration-master
 
 EXPOSE 8080 6633
 
-CMD ["ryu-manager", "mirror_switch.py", "snort_firewall.py"]
+CMD ["ryu-manager", "one_host_version/network_tap.py", "one_host_version/snort_firewall.py"]
